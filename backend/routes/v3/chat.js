@@ -27,7 +27,7 @@ const PHASE_TIMEOUTS = {
   ensureSessionMs: Number(process.env.CHAT_TIMEOUT_ENSURE_SESSION_MS || 5000),
   historyLoadMs: Number(process.env.CHAT_TIMEOUT_HISTORY_LOAD_MS || 4000),
   aiExecutionMs: Number(process.env.CHAT_TIMEOUT_AI_EXECUTION_MS || 20000),
-  saveMessageMs: Number(process.env.CHAT_TIMEOUT_SAVE_MESSAGE_MS || 3000)
+  saveMessageMs: Number(process.env.CHAT_TIMEOUT_SAVE_MESSAGE_MS || 6000)
 };
 const OUTPUT_GUARD_THRESHOLDS = {
   sanitizeRateWarn: Number(process.env.OUTPUT_GUARD_SANITIZE_RATE_WARN || 0.05),
@@ -338,8 +338,36 @@ function extractRetryAfterSeconds(errorMessage = '') {
   return null;
 }
 
+function compactImageMetadata(imageDataUri = '') {
+  const raw = String(imageDataUri || '').trim();
+  if (!raw) {
+    return null;
+  }
+
+  const dataUriMatch = raw.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.*)$/);
+  if (!dataUriMatch) {
+    return '[image payload omitted]';
+  }
+
+  const mimeType = dataUriMatch[1];
+  const base64Payload = dataUriMatch[2] || '';
+  const approxBytes = Math.max(0, Math.floor((base64Payload.length * 3) / 4));
+
+  return `[${mimeType};base64 omitted; chars=${base64Payload.length}; bytes~=${approxBytes}]`;
+}
+
 function classifyAIProviderFailure(errorMessage = '') {
   const text = String(errorMessage || '').toLowerCase();
+  const isInternalPhaseTimeout = text.includes('ensure_session timed out')
+    || text.includes('history_load timed out')
+    || text.includes('save_user_message timed out')
+    || text.includes('save_tool_message timed out')
+    || text.includes('save_assistant_message timed out');
+
+  if (isInternalPhaseTimeout) {
+    return null;
+  }
+
   const isRateLimit = text.includes('429')
     || text.includes('too many requests')
     || text.includes('quota exceeded')
@@ -473,6 +501,27 @@ async function withTimeout(task, timeoutMs, phaseName) {
         }
       });
   });
+}
+
+async function persistMessageBestEffort({ sessionId, payload, phaseName, requestId }) {
+  try {
+    const saveResult = await withTimeout(
+      () => ConversationMemoryService.saveMessage(sessionId, payload),
+      PHASE_TIMEOUTS.saveMessageMs,
+      phaseName
+    );
+
+    if (saveResult && saveResult.success === false) {
+      throw new Error(saveResult.error || `${phaseName} failed`);
+    }
+
+    return true;
+  } catch (persistError) {
+    console.warn(`[${requestId}] [PERSIST_BEST_EFFORT] ${phaseName} failed`, {
+      message: persistError?.message
+    });
+    return false;
+  }
 }
 
 router.get('/chat/health', async (req, res) => {
@@ -921,21 +970,24 @@ router.post('/chat', optionalAuth, async (req, res) => {
     const finalizedProducts = guardedOutput.products;
 
     console.log(`[${requestId}] [STEP 9] saving user message`);
-    await withTimeout(
-      () => ConversationMemoryService.saveMessage(effectiveSessionId, {
+    const userMessageSaved = await persistMessageBestEffort({
+      sessionId: effectiveSessionId,
+      payload: {
         role: 'user',
         content: effectiveMessage,
         metadata: {
           source: 'api_v3_chat',
           userId: normalizedClientUserId,
           hasImagePayload,
-          image: hasImagePayload ? normalizedImageBase64 : null
+          image: hasImagePayload ? compactImageMetadata(normalizedImageBase64) : null
         }
-      }),
-      PHASE_TIMEOUTS.saveMessageMs,
-      'save_user_message'
-    );
-    console.log(`[${requestId}] [STEP 9.1] user message saved`);
+      },
+      phaseName: 'save_user_message',
+      requestId
+    });
+    console.log(`[${requestId}] [STEP 9.1] user message save finished`, {
+      persisted: userMessageSaved
+    });
 
     const toolTrace = Array.isArray(aiResult?.raw?.result?.toolTrace)
       ? aiResult.raw.result.toolTrace
@@ -949,8 +1001,9 @@ router.post('/chat', optionalAuth, async (req, res) => {
       for (const traceItem of toolTrace.slice(0, 8)) {
         const toolName = String(traceItem?.name || 'tool').trim() || 'tool';
 
-        await withTimeout(
-          () => ConversationMemoryService.saveMessage(effectiveSessionId, {
+        await persistMessageBestEffort({
+          sessionId: effectiveSessionId,
+          payload: {
             role: 'system',
             content: `[TOOL:${toolName}]`,
             metadata: {
@@ -959,16 +1012,17 @@ router.post('/chat', optionalAuth, async (req, res) => {
               toolArguments: traceItem?.arguments || {},
               toolResult: traceItem?.result || {}
             }
-          }),
-          PHASE_TIMEOUTS.saveMessageMs,
-          'save_tool_message'
-        );
+          },
+          phaseName: 'save_tool_message',
+          requestId
+        });
       }
     }
 
     console.log(`[${requestId}] [STEP 10] saving assistant message`);
-    await withTimeout(
-      () => ConversationMemoryService.saveMessage(effectiveSessionId, {
+    const assistantMessageSaved = await persistMessageBestEffort({
+      sessionId: effectiveSessionId,
+      payload: {
         role: 'assistant',
         content: cleanMessage,
         metadata: {
@@ -977,11 +1031,13 @@ router.post('/chat', optionalAuth, async (req, res) => {
           products: finalizedProducts,
           usage: aiResult?.usage || null
         }
-      }),
-      PHASE_TIMEOUTS.saveMessageMs,
-      'save_assistant_message'
-    );
-    console.log(`[${requestId}] [STEP 10.1] assistant message saved`);
+      },
+      phaseName: 'save_assistant_message',
+      requestId
+    });
+    console.log(`[${requestId}] [STEP 10.1] assistant message save finished`, {
+      persisted: assistantMessageSaved
+    });
     console.log(`[${requestId}] [STEP 11] sending success response`);
 
     return res.json({

@@ -21,6 +21,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   // V2 AI Recommendations with automatic V1 fallback
   const { 
@@ -52,6 +53,10 @@ const ProductDetail = () => {
     // Track product view for recommendation training
     if (id) trackView(id);
   }, [id, fetchProduct, trackView]);
+
+  useEffect(() => {
+    setIsDescriptionExpanded(false);
+  }, [id]);
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -137,6 +142,19 @@ const ProductDetail = () => {
     return () => clearInterval(sliderTimer);
   }, [uniqueProductImages]);
 
+  const handleDescriptionToggle = () => {
+    setIsDescriptionExpanded((prev) => {
+      const next = !prev;
+
+      // When collapsing, bring the user back to the top of the page.
+      if (prev) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      return next;
+    });
+  };
+
   if (loading) {
     return <div className="loading">Đang tải...</div>;
   }
@@ -216,10 +234,22 @@ const ProductDetail = () => {
 
             <div className="description">
               <h3>Mô tả sản phẩm</h3>
-              <div
-                className="product-description-content"
-                dangerouslySetInnerHTML={{ __html: product.description }}
-              />
+
+              <div className={`description-wrapper ${isDescriptionExpanded ? 'expanded' : ''}`}>
+                <div
+                  className="product-description-content"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
+                <div className="description-fade-overlay" />
+              </div>
+
+              <button
+                type="button"
+                className="description-toggle-btn"
+                onClick={handleDescriptionToggle}
+              >
+                {isDescriptionExpanded ? 'Thu gọn ▴' : 'Xem thêm ▸'}
+              </button>
             </div>
 
             {product.specifications && Object.keys(product.specifications).length > 0 && (
