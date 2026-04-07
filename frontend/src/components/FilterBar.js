@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../config/apiConfig';
 import './FilterBar.css';
 
 const FilterBar = ({ currentCategory }) => {
@@ -45,8 +46,7 @@ const FilterBar = ({ currentCategory }) => {
 
   const fetchFilters = async (categoryName) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const url = `${API_URL}/filters?category=${encodeURIComponent(categoryName)}`;
+      const url = `${API_BASE_URL}/filters?category=${encodeURIComponent(categoryName)}`;
       
       const response = await fetch(url);
       if (!response.ok) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../config/apiConfig';
 import './ProductFilter.css';
 
 const ProductFilter = ({ currentCategory, totalProducts }) => {
@@ -54,8 +55,7 @@ const ProductFilter = ({ currentCategory, totalProducts }) => {
 
   const fetchCategoryFilters = async (category) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${API_URL}/filters?category=${encodeURIComponent(category)}`);
+      const response = await fetch(`${API_BASE_URL}/filters?category=${encodeURIComponent(category)}`);
       if (response.ok) {
         const data = await response.json();
         setFilters(Array.isArray(data) ? data : []);
@@ -69,8 +69,7 @@ const ProductFilter = ({ currentCategory, totalProducts }) => {
 
   const fetchCategoryBrands = async (category) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${API_URL}/products/brands?category=${encodeURIComponent(category)}`);
+      const response = await fetch(`${API_BASE_URL}/products/brands?category=${encodeURIComponent(category)}`);
       if (response.ok) {
         const data = await response.json();
         setBrands(Array.isArray(data) ? data : []);

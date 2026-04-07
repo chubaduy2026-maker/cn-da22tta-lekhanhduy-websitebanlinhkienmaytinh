@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FiImage, FiMic, FiSend, FiZap } from 'react-icons/fi';
+import { API_BASE_URL } from '../config/apiConfig';
 import './AICommerceChat.css';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-const CHAT_ENDPOINT = `${API_BASE}/api/v3/chat`;
+const CHAT_ENDPOINT = `${API_BASE_URL}/v3/chat`;
 const SESSION_STORAGE_KEY = 'ai_chat_session';
 
 const INITIAL_MESSAGES = [

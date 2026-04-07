@@ -7,6 +7,7 @@ import RecommendationSection from '../components/RecommendationSection';
 import VideoReviewSection from '../components/VideoReviewSection';
 import { useTrendingProducts, useUserRecommendations, useBestSellerProducts } from '../hooks/useRecommendations';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/apiConfig';
 import './Home.css';
 
 const Home = ({ searchQuery }) => {
@@ -238,10 +239,9 @@ const Home = ({ searchQuery }) => {
 
   const fetchDynamicFilters = async (category = '') => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
       const url = category
-        ? `${API_URL}/filters?category=${category}`
-        : `${API_URL}/filters`;
+        ? `${API_BASE_URL}/filters?category=${category}`
+        : `${API_BASE_URL}/filters`;
 
       const response = await fetch(url);
       const data = await response.json();
@@ -260,8 +260,7 @@ const Home = ({ searchQuery }) => {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${API_URL}/categories/subcategories/${encodeURIComponent(category)}`);
+      const response = await fetch(`${API_BASE_URL}/categories/subcategories/${encodeURIComponent(category)}`);
       const data = await response.json();
       setSubcategories(Array.isArray(data) ? data : []);
     } catch (error) {

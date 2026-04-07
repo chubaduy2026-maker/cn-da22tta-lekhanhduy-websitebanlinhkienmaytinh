@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiChevronRight, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { API_BASE_URL } from '../config/apiConfig';
 import './MegaMenu.css';
 
 // Number of items to show per column before showing "Xem thêm"
@@ -37,8 +38,7 @@ const MegaMenu = () => {
 
   const fetchCategories = async () => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${API_URL}/categories`);
+      const response = await fetch(`${API_BASE_URL}/categories`);
       const data = await response.json();
       console.log('Categories data:', data);
       setCategories(Array.isArray(data) ? data : []);
@@ -50,8 +50,7 @@ const MegaMenu = () => {
 
   const fetchBrands = async () => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const response = await fetch(`${API_URL}/products/brands/list`);
+      const response = await fetch(`${API_BASE_URL}/products/brands/list`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch brands');
@@ -87,8 +86,7 @@ const MegaMenu = () => {
     if (!categoryName) return;
     
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      const url = `${API_URL}/filters?category=${encodeURIComponent(categoryName)}`;
+      const url = `${API_BASE_URL}/filters?category=${encodeURIComponent(categoryName)}`;
       
       const response = await fetch(url);
       

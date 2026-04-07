@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 // Load environment variables FIRST - before importing passport
 dotenv.config();
@@ -92,11 +93,24 @@ app.get('/', (req, res) => {
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
+  const backendBuildPath = path.join(__dirname, 'build');
+  const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+  // Support both monolithic deploy (backend/build) and monorepo deploy (frontend/build).
+  const resolvedBuildPath = fs.existsSync(backendBuildPath)
+    ? backendBuildPath
+    : (fs.existsSync(frontendBuildPath) ? frontendBuildPath : null);
+
+  if (resolvedBuildPath) {
+    app.use(express.static(resolvedBuildPath));
+
+    // Only fallback to SPA for non-API routes.
+    app.get(/^\/(?!api\/).*/, (req, res) => {
+      res.sendFile(path.join(resolvedBuildPath, 'index.html'));
+    });
+  } else {
+    console.warn('Frontend build not found. Running API-only mode in production.');
+  }
 }
 
 // Error handling middleware
