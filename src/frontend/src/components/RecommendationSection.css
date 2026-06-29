@@ -1,0 +1,420 @@
+/* ═══════════════════════════════════════════════════════════
+   RecommendationSection — Premium AI Recommendation Display
+   Glassmorphism + animated gradient borders + modern effects
+   ═══════════════════════════════════════════════════════════ */
+
+.recommendation-section {
+  margin: 40px 0;
+  padding: 32px 24px;
+  background: linear-gradient(135deg, 
+    rgba(15, 20, 28, 0.5) 0%, 
+    rgba(8, 11, 17, 0.7) 50%,
+    rgba(15, 20, 28, 0.5) 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Decorative gradient orbs */
+.recommendation-section::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.recommendation-section::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid transparent;
+  background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+              linear-gradient(135deg, var(--primary), var(--secondary), var(--accent-teal)) border-box;
+  border-radius: 0 0 6px 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.recommendation-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.rec-source-badge {
+  font-size: 0.72rem;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+  text-transform: uppercase;
+}
+
+.rec-source-badge:hover {
+  transform: scale(1.08);
+}
+
+.rec-source-python-ai,
+.rec-source-v2 {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+}
+
+.rec-source-v1,
+.rec-source-nodejs-fallback {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.ai-source-badge {
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-left: 10px;
+  background: var(--primary-gradient);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  perspective: 1000px;
+  position: relative;
+  z-index: 1;
+}
+
+.recommendation-item {
+  position: relative;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+}
+
+/* Enhanced hover effect */
+.recommendation-item:hover {
+  z-index: 10;
+  transform: translateY(-4px);
+}
+
+/* Animated gradient border on hover */
+.recommendation-item::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent-teal), var(--primary-light));
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(8px);
+  animation: gradientBorderFlow 4s ease infinite;
+}
+
+@keyframes gradientBorderFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.recommendation-item:hover::after {
+  opacity: 0.6;
+}
+
+.rec-score-indicator {
+  height: 4px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: -2px;
+  transform-origin: left;
+}
+
+.rec-score-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent-teal));
+  background-size: 200% 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  animation: scoreBarFlow 3s linear infinite;
+}
+
+@keyframes scoreBarFlow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Animated shine effect on score bar */
+.rec-score-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.3) 50%,
+    transparent 100%
+  );
+  animation: scoreShine 2s infinite;
+}
+
+@keyframes scoreShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Loading skeleton - Premium */
+.recommendation-skeleton {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.skeleton-text {
+  height: 14px;
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+.skeleton-price {
+  height: 20px;
+  width: 40%;
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+
+/* Shimmer class for inline use */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.7) 50%,
+    transparent 100%
+  );
+  animation: shimmerOverlay 1.5s infinite;
+}
+
+@keyframes shimmerOverlay {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .recommendation-section {
+    margin: 25px 10px;
+    padding: 20px 15px;
+    border-radius: 16px;
+  }
+
+  .recommendation-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .recommendation-title {
+    font-size: 1.2rem;
+  }
+  
+  .recommendation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recommendation-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .recommendation-section {
+    margin: 20px 5px;
+    padding: 15px 10px;
+  }
+}
+
+/* Storefront recommendation polish: keep AI data, reduce decorative noise. */
+.recommendation-section {
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.94), rgba(11, 16, 32, 0.96));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.recommendation-section::before {
+  display: block;
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.04) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.recommendation-section::after {
+  display: block;
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.04) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.recommendation-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 0;
+}
+
+.recommendation-title {
+  color: #f8fafc;
+  letter-spacing: 0;
+}
+
+.rec-source-badge,
+.ai-source-badge {
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  color: #bae6fd;
+  box-shadow: none;
+}
+
+.recommendation-grid {
+  gap: 1.1rem;
+}
+
+.recommendation-item {
+  border-radius: 8px;
+}
+
+.recommendation-item::after {
+  display: none;
+}
+
+.recommendation-item:hover {
+  transform: translateY(-3px);
+}
+
+.rec-score-indicator {
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.rec-score-bar {
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+  animation: none;
+}
+
+.rec-score-bar::after {
+  display: none;
+}
+
+.recommendation-skeleton {
+  border-radius: 8px;
+  background: #111827;
+  border-color: rgba(148, 163, 184, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recommendation-section,
+  .recommendation-item,
+  .rec-score-bar {
+    animation: none !important;
+    transition: none !important;
+  }
+}

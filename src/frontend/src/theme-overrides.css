@@ -1,0 +1,566 @@
+/* Final theme contract.
+   Keep this file imported last so legacy page CSS cannot split dark/light colors. */
+
+:root,
+html[data-theme='dark'] {
+  --header-height: 72px;
+  --bg-page: #070b14;
+  --bg-main: #0b1020;
+  --bg-surface: #111827;
+  --bg-card: #121a2a;
+  --bg-elevated: #172033;
+  --text-main: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: rgba(148, 163, 184, 0.24);
+  --accent-cyan: #38bdf8;
+  --accent-purple: #8b5cf6;
+  --danger: #f43f5e;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --input-bg: #111827;
+  --text-inverse: #07111f;
+  --shadow-color: rgba(0, 0, 0, 0.34);
+  --bg-primary: var(--bg-page);
+  --bg-secondary: var(--bg-main);
+  --bg-tertiary: var(--bg-surface);
+  --text-primary: var(--text-main);
+  --secondary: var(--accent-cyan);
+  --primary: var(--accent-purple);
+  --price-color: var(--accent-cyan);
+}
+
+html[data-theme='light'] {
+  --header-height: 72px;
+  --bg-page: #f6f8fb;
+  --bg-main: #eef3f8;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --text-main: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border-color: #d8e0ea;
+  --accent-cyan: #0284c7;
+  --accent-purple: #7c3aed;
+  --danger: #e11d48;
+  --success: #16a34a;
+  --warning: #d97706;
+  --input-bg: #ffffff;
+  --text-inverse: #ffffff;
+  --shadow-color: rgba(15, 23, 42, 0.12);
+  --bg-primary: var(--bg-page);
+  --bg-secondary: var(--bg-main);
+  --bg-tertiary: var(--bg-surface);
+  --text-primary: var(--text-main);
+  --secondary: var(--accent-cyan);
+  --primary: var(--accent-purple);
+  --price-color: #0369a1;
+}
+
+html,
+body,
+#root,
+.App {
+  background: var(--bg-page) !important;
+  color: var(--text-main) !important;
+  overflow-x: clip;
+}
+
+.customer-main {
+  padding-top: var(--header-height) !important;
+  background: var(--bg-page) !important;
+  color: var(--text-main) !important;
+}
+
+body :where(input, select, textarea) {
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+body :where(input, textarea)::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* Header */
+.header {
+  position: fixed !important;
+  inset: 0 0 auto 0 !important;
+  z-index: 1200 !important;
+  min-height: var(--header-height);
+  background: var(--bg-main) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 10px 28px var(--shadow-color) !important;
+}
+
+.header :where(.logo, .categories-button, .hotline-link, .user-button, .login-button, .cart-link, .theme-toggle) {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.header :where(.logo-title, .categories-button span, .user-button span, .login-button span) {
+  color: var(--text-main) !important;
+  opacity: 1 !important;
+}
+
+.header :where(.logo-subtitle, .hotline-link) {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+.header .search-input {
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-color) !important;
+}
+
+.header .search-input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* Hero stays intentionally dark in both themes; text must not inherit dark light-mode text. */
+.hero-section {
+  background:
+    linear-gradient(130deg, rgba(7, 11, 20, 0.98) 0%, rgba(11, 16, 32, 0.98) 58%, rgba(17, 24, 39, 0.98) 100%) !important;
+  color: #f8fafc !important;
+}
+
+.hero-section :where(.hero-title, .showcase-name) {
+  color: #f8fafc !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.hero-section :where(.hero-description, .hero-trust-row span, .showcase-specs) {
+  color: #cbd5e1 !important;
+  opacity: 1 !important;
+}
+
+.hero-section .text-gradient-cyan-purple {
+  background: linear-gradient(100deg, #38bdf8 0%, #22d3ee 42%, #a78bfa 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Storefront surfaces */
+.home :where(
+  .page-header,
+  .search-results-header,
+  .category-header-section,
+  .filter-bar-container,
+  .active-filters-top,
+  .active-filters-main,
+  .subcategories-filter-panel,
+  .categories-grid-section,
+  .no-products,
+  .pagination,
+  .tech-news-section,
+  .video-card,
+  .video-card-skeleton,
+  .video-modal,
+  .video-product-link,
+  .video-modal-product
+) {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.home :where(
+  .page-header h2,
+  .search-results-header h2,
+  .category-title,
+  .categories-grid-title,
+  .subcategories-title,
+  .video-review-title,
+  .video-card-title,
+  .video-modal-info h3,
+  .tech-news-title,
+  .tech-news-item span,
+  .category-card h3,
+  .category-name,
+  .sidebar-categories-title,
+  .sidebar-category-name
+) {
+  color: var(--text-main) !important;
+  opacity: 1 !important;
+}
+
+.home :where(
+  .subtitle,
+  .search-count,
+  .category-product-count,
+  .filter-hint,
+  .filter-column-item,
+  .no-products p,
+  .category-description,
+  .tech-news-item-content small,
+  .tech-news-placeholder,
+  .modal-product-name
+) {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+.home :where(.tech-news-item:hover, .video-product-link:hover, .video-modal-product:hover) {
+  background: var(--bg-elevated) !important;
+}
+
+/* Category sidebar */
+.content-wrapper {
+  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr) !important;
+  align-items: start !important;
+}
+
+.sidebar {
+  position: sticky !important;
+  top: calc(var(--header-height, 72px) + 16px) !important;
+  height: calc(100vh - var(--header-height, 72px) - 32px) !important;
+  max-height: calc(100vh - var(--header-height, 72px) - 32px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.sidebar-category-item {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+  min-height: 108px !important;
+}
+
+.sidebar-category-item:hover,
+.sidebar-category-item.active {
+  background: var(--bg-elevated) !important;
+  border-color: var(--accent-cyan) !important;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 999px;
+}
+
+/* Product and pagination */
+.product-card,
+.category-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.product-card :where(.product-name, .rating-value) {
+  color: var(--text-main) !important;
+}
+
+.product-card :where(.product-specs, .review-count, .original-price, .card-rec-reason-item) {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+.product-price,
+.video-product-name,
+.modal-product-price,
+.tech-news-item:hover span {
+  color: var(--accent-cyan) !important;
+}
+
+.pagination :where(.pagination-btn, .pagination-number) {
+  background: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+.pagination .pagination-number.active {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)) !important;
+  color: #ffffff !important;
+}
+
+.pagination .pagination-btn:disabled {
+  color: var(--text-muted) !important;
+  opacity: 0.78 !important;
+}
+
+/* Admin */
+.admin-layout {
+  background: var(--bg-page) !important;
+  color: var(--text-main) !important;
+}
+
+.admin-layout :where(.admin-main, .admin-content) {
+  background: transparent !important;
+  color: var(--text-main) !important;
+}
+
+.admin-layout :where(
+  .db-card,
+  .db-table-card,
+  .search-bar,
+  .filter-bar,
+  .filters-bar,
+  .orders-filters,
+  .users-filters,
+  .coupons-stats,
+  .products-table-container,
+  .categories-table-container,
+  .filters-table-container,
+  .orders-table-container,
+  .users-table-container,
+  .coupons-table-container,
+  .reviews-table-wrapper,
+  .avr-form-card,
+  .avr-card,
+  .avr-product-dropdown,
+  .avr-selected-product,
+  .atn-form-card,
+  .atn-card,
+  .atn-loading,
+  .atn-empty,
+  .modal-content,
+  .ai-modal-content,
+  .subcategory-list,
+  .subcategory-checkbox,
+  .quill,
+  .ql-toolbar
+) {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 16px 38px var(--shadow-color) !important;
+}
+
+.admin-layout :where(.page-header, .admin-coupons-header, .avr-header, .atn-header, .users-header, .orders-header) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.admin-layout :where(h1, h2, h3, h4, h5, h6, .db-card-title, .db-stat-value, .db-metric-val) {
+  color: var(--text-main) !important;
+  opacity: 1 !important;
+}
+
+.admin-layout :where(p, label, small, .db-card-subtitle, .db-metric-label, .avr-header p, .atn-header p, .atn-source, .atn-summary, .avr-reviewer, .avr-loading, .avr-empty, .no-data) {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+.admin-layout :where(table, tbody tr) {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+.admin-layout :where(thead, thead tr) {
+  background: var(--bg-elevated) !important;
+}
+
+.admin-layout :where(th) {
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+  font-weight: 800 !important;
+}
+
+.admin-layout :where(td) {
+  color: var(--text-secondary) !important;
+  border-color: rgba(148, 163, 184, 0.18) !important;
+  opacity: 1 !important;
+}
+
+.admin-layout :where(tbody tr:hover) {
+  background: var(--bg-elevated) !important;
+}
+
+.admin-layout :where(
+  .product-name,
+  .filter-name,
+  .coupon-code,
+  .name-with-icon strong,
+  .user-name,
+  .item-info h4,
+  .info-item strong,
+  .subcategory-text,
+  .option-name,
+  .avr-card-body h4,
+  .atn-card-body h4
+) {
+  color: var(--text-main) !important;
+  opacity: 1 !important;
+  font-weight: 750 !important;
+}
+
+.admin-layout :where(input, select, textarea, .search-input, .subcategory-search, .category-filter, .stock-filter, .status-filter, .status-select) {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.admin-layout :where(input, textarea)::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+.admin-layout :where(.price, .order-number, .stat-item strong, .selected-count, .option-price) {
+  color: var(--accent-cyan) !important;
+}
+
+.admin-layout :where(.status-badge, .role-badge, .stock, .db-badge, .db-stock-badge, .db-role-badge) {
+  opacity: 1 !important;
+  font-weight: 800 !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.admin-layout :where(.status-badge.active, .role-badge.customer, .stock) {
+  color: var(--success) !important;
+  background: rgba(34, 197, 94, 0.12) !important;
+}
+
+.admin-layout :where(.status-badge.inactive, .stock.low) {
+  color: var(--danger) !important;
+  background: rgba(244, 63, 94, 0.12) !important;
+}
+
+.admin-layout :where(.role-badge.staff) {
+  color: var(--accent-cyan) !important;
+  background: rgba(56, 189, 248, 0.12) !important;
+}
+
+.admin-layout :where(.role-badge.admin) {
+  color: var(--accent-purple) !important;
+  background: rgba(139, 92, 246, 0.12) !important;
+}
+
+.admin-layout :where(.btn-primary, .btn-submit, .add-coupon-btn, .avr-add-btn, .avr-save-btn, .atn-add-btn, .atn-save-btn, .admin-users .btn-refresh, .admin-orders .btn-refresh) {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+}
+
+.admin-layout :where(.btn-cancel, .btn-clear-all, .avr-cancel-btn, .atn-cancel-btn) {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.admin-layout :where(.btn-edit, .btn-view, .atn-card-actions button) {
+  background: var(--bg-elevated) !important;
+  color: var(--accent-cyan) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.admin-layout :where(.btn-delete, .btn-cancel-order, .btn-delete-order, .btn-delete-order-modal, .atn-card-actions button.delete) {
+  background: rgba(244, 63, 94, 0.12) !important;
+  color: var(--danger) !important;
+  border: 1px solid rgba(244, 63, 94, 0.32) !important;
+}
+
+.admin-layout :where([class*="table-container"], [class*="table-wrapper"]) {
+  overflow-x: auto !important;
+}
+
+@media (max-width: 768px) {
+  :root,
+  html[data-theme='dark'],
+  html[data-theme='light'] {
+    --header-height: 104px;
+  }
+
+  .header {
+    min-height: var(--header-height);
+  }
+
+  .header-content {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .header .logo {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 196px) !important;
+  }
+
+  .header .nav {
+    gap: 8px !important;
+    margin-left: 0 !important;
+  }
+
+  .header :where(.categories-button, .login-button, .user-button, .cart-link) {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .header .theme-toggle {
+    width: 52px !important;
+    min-width: 52px !important;
+    height: 40px !important;
+    padding: 0 !important;
+  }
+
+  .header .search-form {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 4 !important;
+  }
+
+  .content-wrapper {
+    display: block !important;
+  }
+
+  .sidebar {
+    position: static !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .sidebar-categories-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    grid-template-columns: unset !important;
+  }
+
+  .sidebar-category-item {
+    min-width: 112px !important;
+    flex: 0 0 112px !important;
+  }
+
+  .admin-layout :where(table) {
+    min-width: 780px;
+  }
+}
+
+@media (max-width: 360px) {
+  .header .logo {
+    max-width: calc(100% - 180px) !important;
+  }
+
+  .header :where(.categories-button, .login-button, .user-button, .cart-link) {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+  }
+
+  .header .theme-toggle {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 36px !important;
+  }
+}

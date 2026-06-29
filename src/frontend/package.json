@@ -1,0 +1,55 @@
+{
+  "name": "electronics-store-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@tinymce/tinymce-react": "^6.3.0",
+    "axios": "^1.6.2",
+    "framer-motion": "^12.34.5",
+    "gsap": "^3.14.2",
+    "lucide-react": "^0.577.0",
+    "postcss": "^8.5.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "^5.0.1",
+    "recharts": "^3.6.0",
+    "remark-gfm": "^4.0.1",
+    "sweetalert2": "^11.26.17",
+    "uuid": "^13.0.0"
+  },
+  "scripts": {
+    "start": "cross-env NODE_OPTIONS=--no-deprecation react-scripts start",
+    "start:clean": "react-scripts start",
+    "build": "cross-env CI=false react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "cross-env": "^10.1.0"
+  }
+}
